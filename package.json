@@ -1,0 +1,29 @@
+{
+  "name": "server-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "www.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon bin/www.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1Like1Prayer/server-2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1Like1Prayer/server-2/issues"
+  },
+  "homepage": "https://github.com/1Like1Prayer/server-2#readme",
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "mongodb": "^3.3.5",
+    "mongoose": "^5.7.12",
+    "nconf": "^0.10.0",
+    "nodemon": "^2.0.1"
+  }
+}
