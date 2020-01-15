@@ -4,8 +4,10 @@
   "description": "",
   "main": "www.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon bin/www.js"
+    "test": "npm run tsc && npm run serve",
+    "start": "nodemon bin/www.js",
+    "serve": "nodemon dist/bin/www.js",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -18,12 +20,15 @@
   },
   "homepage": "https://github.com/1Like1Prayer/server-2#readme",
   "dependencies": {
+    "@hapi/joi": "^16.1.8",
+    "@types/node": "^12.12.20",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "mongodb": "^3.3.5",
     "mongoose": "^5.7.12",
     "nconf": "^0.10.0",
-    "nodemon": "^2.0.1"
+    "nodemon": "^2.0.1",
+    "winston": "^3.2.1"
   }
 }

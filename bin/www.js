@@ -1,24 +1,16 @@
-const mongoClient = require('mongodb').MongoClient;
-
 const koa = require('koa');
 const app = new koa();
+const bodyParser = require('koa-bodyparser');
 const router = require('../src/routes/router').router;
 const nconf = require('../config/configuration').nconf;
+const mongoConnect = require('../data/database-connection').mongoConnect;
 
-const mongoConnect = () => {
-    mongoClient.connect(nconf.get('mongoUrl')).then(client => {
-        console.log('connected');
-        client.db = nconf.get('dbName');
-    }).catch(err => console.log(err));
+const listen = () => {
+    app.listen(nconf.get('port'), () => console.log(`listening on port ${nconf.get('port')}`));
 };
 
-mongoConnect(client => {
-    console.log(client);
-});
-
-
-app.use(router.routes()).use(router.allowedMethods());
-app.listen(nconf.get('port'), () => console.log(`listening on port ${nconf.get('port')}`));
+app.use(bodyParser()).use(router.routes()).use(router.allowedMethods());
+mongoConnect(listen);
 
 process.on('uncaughtException', (err) => {
     console.log('unexpectedException ---->' + err);

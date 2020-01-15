@@ -3,5 +3,5 @@
   "dbPort": 27017,
   "dbName": "AmaRomach",
   "collectionName": "products",
-  "mongoUrl": "mongodb://localhost:27017"
+  "mongoUrl": "mongodb://localhost:27017/AmaRomach"
 }
