@@ -1,5 +1,6 @@
-const Joi = require('@hapi/joi');
-exports.joiProductSchema = Joi.object({
+import * as Joi from '@hapi/joi';
+
+export const joiProductSchema = Joi.object({
         name: Joi.string()
             .alphanum()
             .min(1)
@@ -13,15 +14,15 @@ exports.joiProductSchema = Joi.object({
             .required(),
         amount: Joi.number()
             .min(1)
-            .required()
-    }
+            .required(),
+    },
 );
-exports.joiCheckOutSchema = Joi.object({
+export const joiCheckOutSchema = Joi.object({
     name: Joi.string()
         .alphanum()
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
         .required(),
     amount: Joi.number()
         .min(1)
-        .required()
+        .required(),
 });

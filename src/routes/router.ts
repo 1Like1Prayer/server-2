@@ -1,7 +1,6 @@
-const productController = require("../controllers/productsController");
-
-const Router = require('koa-router');
-const router = new Router();
+import * as Router from 'koa-router';
+import * as productController from '../controllers/products-controller';
+export const router = new Router();
 
 router.use(async (ctx, next) => {
     try {
@@ -15,28 +14,25 @@ router.use(async (ctx, next) => {
     }
 });
 
-router.get('/products', async ctx => {
+router.get('/products', async (ctx) => {
     ctx.body = await productController.getProducts();
-
 });
 
-router.get('/products/:id', async ctx => {
-    ctx.body = await productController.getProductById(ctx.params.id)
+router.get('/products/:id', async (ctx) => {
+    ctx.body = await productController.getProductById(ctx.params.id);
 });
 
-router.post('/product', async ctx => {
-    ctx.body = await productController.addProduct(ctx.request.body)
+router.post('/product', async (ctx) => {
+    ctx.body = await productController.addProduct(ctx.request.body);
 });
 
-router.put('/product/:id', async ctx => {
+router.put('/product/:id', async (ctx) => {
     ctx.body = await productController.editProduct(ctx.params.id);
 });
-router.delete('/product/:id', async ctx => {
+router.delete('/product/:id', async (ctx) => {
     ctx.body = await productController.deleteProduct(ctx.params.id);
 });
 
-router.post('/checkout', async ctx => {
+router.post('/checkout', async (ctx) => {
     ctx.body = await productController.checkOut(ctx.request.body);
 });
-
-exports.router = router;

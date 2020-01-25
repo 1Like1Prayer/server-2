@@ -5,6 +5,7 @@
     "target": "es5",
     "allowJs": true,
     "sourceMap": true,
+    "noImplicitAny": true,
     "outDir": "dist"
   },
   "include": [
@@ -14,6 +15,7 @@
     "./data/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./dist"
   ]
 }

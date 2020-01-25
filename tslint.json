@@ -1,0 +1,25 @@
+{
+  "defaultSeverity": "error",
+  "rulesDirectory": [],
+  "extends": [
+    "tslint:latest"
+  ],
+  "jsRules": {},
+  "rules": {
+    "no-return-await": false,
+    "quotemark": false,
+    "file-name-casing": [
+      true,
+      "kebab-case"
+    ],
+    "member-access": [
+      true,
+      "no-public"
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "object-literal-sort-keys": false
+  }
+}

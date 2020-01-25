@@ -2,10 +2,10 @@
   "name": "server-2",
   "version": "1.0.0",
   "description": "",
-  "main": "www.js",
+  "main": "www.ts",
   "scripts": {
     "test": "npm run tsc && npm run serve",
-    "start": "nodemon bin/www.js",
+    "start": "nodemon  && ts-node bin/www.ts",
     "serve": "nodemon dist/bin/www.js",
     "build": "tsc"
   },
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/1Like1Prayer/server-2#readme",
   "dependencies": {
     "@hapi/joi": "^16.1.8",
+    "@types/hapi__joi": "^16.0.6",
     "@types/node": "^12.12.20",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
@@ -29,6 +30,15 @@
     "mongoose": "^5.7.12",
     "nconf": "^0.10.0",
     "nodemon": "^2.0.1",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.11.0",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-router": "^7.4.0",
+    "@types/mongoose": "^5.5.41",
+    "@types/nconf": "^0.10.0"
   }
 }
