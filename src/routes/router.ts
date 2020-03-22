@@ -1,18 +1,7 @@
 import * as Router from 'koa-router';
 import * as productController from '../controllers/products-controller';
-export const router = new Router();
 
-router.use(async (ctx, next) => {
-    try {
-        await next();
-    } catch (err) {
-        err = productController.mongooseErrorHandler(err);
-        err.status = err.statusCode || err.status || 500;
-        ctx.status = err.status;
-        ctx.body = err.message;
-        productController.errorHandler(err);
-    }
-});
+export const router = new Router();
 
 router.get('/products', async (ctx) => {
     ctx.body = await productController.getProducts();

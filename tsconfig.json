@@ -10,9 +10,9 @@
   },
   "include": [
     "./src/**/*.ts",
-    "./bin/**/*.ts",
-    "./config/*.ts",
-    "./data/**/*.ts"
+    "./src/bin/**/*.ts",
+    "./src/config/*.ts",
+    "./src/data/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -4,7 +4,7 @@ export const joiProductSchema = Joi.object({
         name: Joi.string()
             .alphanum()
             .min(1)
-            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+            .max(30)
             .required(),
         description: Joi.string()
             .min(1)
@@ -20,7 +20,8 @@ export const joiProductSchema = Joi.object({
 export const joiCheckOutSchema = Joi.object({
     name: Joi.string()
         .alphanum()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+        .min(3)
+        .max(30)
         .required(),
     amount: Joi.number()
         .min(1)

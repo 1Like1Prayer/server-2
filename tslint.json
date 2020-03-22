@@ -7,7 +7,12 @@
   "jsRules": {},
   "rules": {
     "no-return-await": false,
-    "quotemark": false,
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape",
+      "avoid-template"
+    ],
     "file-name-casing": [
       true,
       "kebab-case"
