@@ -6,7 +6,6 @@
   ],
   "jsRules": {},
   "rules": {
-    "no-return-await": false,
     "quotemark": [
       true,
       "single",
@@ -24,7 +23,6 @@
     "interface-name": [
       true,
       "never-prefix"
-    ],
-    "object-literal-sort-keys": false
+    ]
   }
 }

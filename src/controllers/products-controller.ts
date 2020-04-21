@@ -1,102 +1,94 @@
+import { Product, ProductInterface } from '../data/models/product';
 import { ProductInCart } from '../data/models/product-in-cart';
-import { Product, ProductInterface } from '../data/models/products';
-import { logger } from '../logs/logger';
 import { ServerError } from '../models/server-error';
+import { logger } from '../utils/logs/logger';
 import { joiCheckOutSchema, joiProductSchema } from '../validations/product-validation-schemas';
 
 enum errorMessages {
     NOT_FOUND = 'product not found',
+    NOT_VALID = 'product id not valid',
+    INTERNAL = 'internal server error',
 }
 
-export const getProducts = async () => {
+export const getProducts = async (ctx: any) => {
     try {
-        return await Product.find();
+        ctx.body = await Product.find();
     } catch (err) {
-        errorHandler({ message: err.message, status: 404 });
+        throw new ServerError(err.message, 500, errorMessages.INTERNAL);
+    }
+};
+export const getProductById = async (ctx: any) => {
+    try {
+        const product = await Product.findById(ctx.params.id);
+        productExistenceCheck(product, ctx);
+    } catch (err) {
+        throw new ServerError(err.message, 400, errorMessages.NOT_VALID);
     }
 };
 
-export const getProductById = async (id: string) => {
+export const addProduct = async (ctx: any) => {
+    const product = ctx.request.body;
+    const { error } = joiProductSchema.validate(product);
+    if (error) {
+        logger.info(`joi error - ${error}`);
+        ctx.body = error.message;
+        ctx.status = 400;
+        return;
+    }
     try {
-        const product = await Product.findById(id);
-        if (product) {
-            return product;
-        } else {
-            throw { message: errorMessages.NOT_FOUND, status: 404 };
-        }
+        ctx.body = await new Product(product).save();
+        ctx.status = 201;
     } catch (err) {
-        err.hasOwnProperty('status') ? errorHandler(err) : errorHandler({ message: err.message, status: 400 });
+        throw new ServerError(err.message, 500, errorMessages.INTERNAL);
     }
 };
 
-export const addProduct = async (product: ProductInterface) => {
+export const editProduct = async (ctx: any) => {
     try {
-        const { error } = joiProductSchema.validate(product);
-        if (error) {
-            throw { message: `${error.name} - ${error.message}`, status: 400 };
-        }
-        return await new Product(product).save();
+        const product = await Product.findByIdAndUpdate(ctx.params.id, { price: 400 }, { new: true });
+        productExistenceCheck(product, ctx);
     } catch (err) {
-        err.hasOwnProperty('status') ? errorHandler(err) : errorHandler({ message: err.message, status: 400 });
+        throw new ServerError(err.message, 400, errorMessages.NOT_VALID);
     }
 };
 
-export const editProduct = async (id: string) => {
+export const deleteProduct = async (ctx: any) => {
     try {
-        const product = await Product.findByIdAndUpdate(id, { price: 400 }, { new: true });
-        if (product) {
-            return product;
-        } else {
-            throw { message: errorMessages.NOT_FOUND, status: 404 };
-        }
+        const product = await Product.findByIdAndRemove(ctx.params.id);
+        productExistenceCheck(product, ctx);
     } catch (err) {
-        err.hasOwnProperty('status') ? errorHandler(err) : errorHandler({ message: err.message, status: 400 });
+        throw new ServerError(err.message, 400, errorMessages.NOT_VALID);
     }
 };
 
-export const deleteProduct = async (id: string) => {
-    try {
-        const product = await Product.findByIdAndRemove(id);
-        if (product) {
-            return product;
-        } else {
-            throw { message: errorMessages.NOT_FOUND, status: 404 };
-        }
-    } catch (err) {
-        err.hasOwnProperty('status') ? errorHandler(err) : errorHandler({ message: err.message, status: 400 });
-    }
-};
-
-export const checkOut = async (products: ProductInCart[]) => {
+export const checkOut = async (ctx: any) => {
+    const products = ctx.request.body;
     products.map(async (cartProduct: ProductInCart) => {
-            try {
-                const { error } = joiCheckOutSchema.validate(cartProduct);
-                if (error) {
-                    throw { message: `${error.name} - ${error.message}`, status: 400 };
-                }
-                const product = await Product.findOne({ name: cartProduct.name });
-                if (!product) {
-                    throw { message: errorMessages.NOT_FOUND, status: 404 };
-                }
-                cartProduct = await Product.findOneAndUpdate({ name: cartProduct.name },
+        const { error } = joiCheckOutSchema.validate(cartProduct);
+        if (error) {
+            logger.info(`joi error - ${error}`);
+            ctx.body = error.message;
+            ctx.status = 400;
+            return;
+        }
+        try {
+            const product = await Product.findOne({ name: cartProduct.name });
+            if (product && cartProduct.amount <= product.amount) {
+                await Product.findOneAndUpdate({ name: cartProduct.name },
                     { amount: product.amount - cartProduct.amount }, { new: true });
-                if (!cartProduct) {
-                    throw { message: errorMessages.NOT_FOUND, status: 404 };
-                }
-            } catch (err) {
-                err.hasOwnProperty('status') ? errorHandler(err) :
-                    errorHandler({ message: err.message, status: 400 });
             }
-        },
-    );
-    try {
-        return await Product.find();
-    } catch (err) {
-        errorHandler({ message: err.message, status: 404 });
-    }
+        } catch (err) {
+            throw new ServerError(err.message, 500, errorMessages.INTERNAL);
+        }
+    });
+    await getProducts(ctx);
 };
 
-export const errorHandler = (err: ServerError) => {
-    process.env.NODE_ENV === 'production' ? logger.error('Internal Server Error 500') :
-        logger.error(`${err.message} status--> ${err.status}`);
+const productExistenceCheck = (product: ProductInterface, ctx: any) => {
+    if (!product) {
+        ctx.body = errorMessages.NOT_FOUND;
+        ctx.status = 404;
+    } else {
+        ctx.body = product;
+    }
 };

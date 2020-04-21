@@ -8,10 +8,10 @@ export interface ProductInterface extends mongoose.Document {
 }
 
 const productSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    price: { type: Number, required: true },
     amount: { type: Number, required: true },
+    description: { type: String, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
 }, { versionKey: false });
 
-export const Product: mongoose.Model<ProductInterface> = mongoose.model('Product', productSchema);
+export const Product = mongoose.model<ProductInterface>('Product', productSchema);

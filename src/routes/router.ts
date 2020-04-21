@@ -1,27 +1,12 @@
 import * as Router from 'koa-router';
 import * as productController from '../controllers/products-controller';
+import { addMiddlewares } from '../middlewares/products-middleware';
 
-export const router = new Router();
-
-router.get('/products', async (ctx) => {
-    ctx.body = await productController.getProducts();
-});
-
-router.get('/products/:id', async (ctx) => {
-    ctx.body = await productController.getProductById(ctx.params.id);
-});
-
-router.post('/product', async (ctx) => {
-    ctx.body = await productController.addProduct(ctx.request.body);
-});
-
-router.put('/product/:id', async (ctx) => {
-    ctx.body = await productController.editProduct(ctx.params.id);
-});
-router.delete('/product/:id', async (ctx) => {
-    ctx.body = await productController.deleteProduct(ctx.params.id);
-});
-
-router.post('/checkout', async (ctx) => {
-    ctx.body = await productController.checkOut(ctx.request.body);
-});
+export const productRouter = new Router();
+addMiddlewares(productRouter);
+productRouter.get('/products', productController.getProducts);
+productRouter.get('/products/:id', productController.getProductById);
+productRouter.post('/product', productController.addProduct);
+productRouter.put('/products/:id', productController.editProduct);
+productRouter.delete('/product/:id', productController.deleteProduct);
+productRouter.post('/checkout', productController.checkOut);
